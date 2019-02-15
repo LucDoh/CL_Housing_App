@@ -11,17 +11,20 @@ from distFromPOI import getDistances
 
 # This part grabs all postings
 #Create empty df for all house postings
+# Makes a data frame called df whose rows are housing postings, of form:
+# df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
 def main():
     distCalc = False
-    stringDB = 'clHousingA.db' #Name the db it will be stored in
+    stringDB = 'clHousing_QQQ' #Name the db it will be stored in
+    searchDist = 5
     df = pd.DataFrame() #strkey = ''
-    startingLink = 'https://washingtondc.craigslist.org/search/apa?availabilityMode=0&postal=20740&search_distance=5'
+    startingLink = 'https://washingtondc.craigslist.org/search/apa?availabilityMode=0&postal=20740&search_distance='+ str(searchDist)
     link = startingLink
     #Max results in craigslist for any search always appears to stop at 3000
-    for i in range(0,240,120): #3000 is the max
+    for i in range(0,3000,120): #3000 is the max
         if(i!=0):
             strkey = 's=' + str(i)
-            link = 'https://washingtondc.craigslist.org/search/apa?availabilityMode=0&postal=20740&' + strkey + '&search_distance=5'
+            link = 'https://washingtondc.craigslist.org/search/apa?availabilityMode=0&postal=20740&' + strkey + '&search_distance=' + str(searchDist)
         df_current = getHouses(makeSoup(link))
         df = df.append(df_current, ignore_index=True)
 
