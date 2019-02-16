@@ -18,7 +18,7 @@ import sys
 # df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
 def main():
     # 1) Retrieve data from db
-    stringDB = 'dbs/' + sys.argv[1] #'clHousing_02-14-18.db'
+    stringDB = sys.argv[1] #'clHousing_02-14-18.db'
     dfx = retrieveAll(stringDB) #print(dfx.dtypes)
     dfx = removeOutliers(dfx)
 

@@ -9,23 +9,22 @@ import seaborn as sns
 from helpers import makeSoup, getHouses, storeInSQL, addtlInfo, cleanRow, pricePerSqft
 from distFromPOI import getDistances
 
-# This scraper grabs all postings, making a data frame called df whose rows
-# are rentals, of  the form:
-# ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
+# This scraper grabs all postings, makes a data frame called df
+# whose rows are housing postings, of  the form:
+# df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
 def main():
     distCalc = False
     prefix = str(sys.argv[1]) #washingtondc
     zip = str(sys.argv[2]) #20740
     dist = str(sys.argv[3]) #5
-    n = int(sys.argv[4])
-    stringDB = 'clHousing_' + zip +"_" + dist +".db" #Name the db it will be stored in
+    stringDB = 'clHousing_' + zip +"_" + dist #Name the db it will be stored in
     searchDist = dist
     df = pd.DataFrame() #strkey = ''
 
     startingLink = 'https://' + prefix +'.craigslist.org/search/apa?availabilityMode=0&postal=' + zip + '&search_distance=' + searchDist
     link = startingLink
     #Max results in craigslist for any search always appears to stop at 3000
-    for i in range(0,n,120): #3000 is the max
+    for i in range(0,240,120): #3000 is the max
         if(i!=0):
             strkey = 's=' + str(i)
             link = 'https://' + prefix + '.craigslist.org/search/apa?availabilityMode=0&postal=' + zip + strkey + '&search_distance=' + searchDist
@@ -59,7 +58,6 @@ def main():
     df = df.drop(df[(df['Price'] > 10000)  | (df['Price'] < 200)].index) #Remove outliers
 
     # Store it all in a SQLite db titled stringDB
-    stringDB = 'dbs/' + stringDB
     storeInSQL(df, stringDB)
 
 main()
