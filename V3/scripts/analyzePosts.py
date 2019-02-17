@@ -8,7 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 #import folium
 #from folium.plugins import HeatMap
-from helpers import makeSoup, getHouses, storeInSQL, addtlInfo, retrieveAll
+from utils.helpers import retrieveAll, storeInSQL
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
@@ -16,9 +16,9 @@ import sys
 
 # To run analysis, run with first argument the db containing df of rentals
 # df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
-def main():
+def analyze(stringDB):
     # 1) Retrieve data from db
-    stringDB = sys.argv[1] #'clHousing_02-14-18.db'
+    stringDB = 'dbs/' + stringDB #'clHousing_02-14-18.db'
     dfx = retrieveAll(stringDB) #print(dfx.dtypes)
     dfx = removeOutliers(dfx)
 
@@ -52,7 +52,7 @@ def removeOutliers(dfx):
     return dfx
 
 
-def plotIt(dfx):
+def plotIt(dfx, savePlots = True):
     perBRAvg = []
     for i in range (1, int(dfx.BR.max())+1):
         x = dfx[dfx.BR == i]
@@ -65,7 +65,7 @@ def plotIt(dfx):
     #Seaborn plotting
     sns.set(style="ticks")
     sns.relplot(x="Sqft", y="Price", hue="BR", palette="ch:r=-1.5,l=.75", data=dfx[dfx.BR < 5]);#palette="ch:r=-.5,l=.75",
-
+    if (savePlot == True): plt.savefig('plots/relPlot.png')
     f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2)
     s1 = pd.Series(dfx.BR.values, name='Bedrooms'); s2 = pd.Series(dfx[dfx.BR == 2].Price.values, name="Price of 2BR")
     s3 = pd.Series(perBRAvg, name = "Mean Price/BR"); s4 = pd.Series(np.arange(1, int(dfx.BR.max()) + 1), name='# of BRs')
@@ -73,7 +73,7 @@ def plotIt(dfx):
     sns.barplot(x=s4, y = s3, ax = ax2)
     sns.distplot(dfx.Price.values.astype('float64'), axlabel = "Price", ax = ax3)
     sns.distplot(s2, kde = False, ax = ax4)
-
+    if (savePlot == True): plt.savefig('plots/distPlots.png')
     plt.show()
 
 
@@ -102,9 +102,6 @@ def makeLinearRegr(dfx, boolPlot = False):
         plt.xticks(())
         plt.xlabel("Price")
         plt.show()
-
-if __name__== "__main__":
-  main()
 
 
 
