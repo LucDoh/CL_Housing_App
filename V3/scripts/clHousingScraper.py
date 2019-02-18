@@ -14,25 +14,16 @@ from utils.helpers import makeSoup, getHouses, storeInSQL, addtlInfo, cleanRow, 
 # ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']
 def scrapeRentals(prefix, zip, dist, n):
     distCalc = False
-    #prefix = str(sys.argv[1]) #washingtondc
-    #zip = str(sys.argv[2]) #20740
-    #dist = str(sys.argv[3]) #5
-    #n = int(sys.argv[4])
     stringDB = 'clHousing_' + zip + "_" + dist + "_" + str(n) + ".db" #Name the db it will be stored in
-    searchDist = dist
-    df = pd.DataFrame() #strkey = ''
 
-    startingLink = 'https://' + prefix +'.craigslist.org/search/apa?availabilityMode=0&postal=' + zip + '&search_distance=' + searchDist
-    link = startingLink
-    #Max results in craigslist for any search always appears to stop at 3000
-    for i in range(0,n,120): #3000 is the max
-        if(i!=0):
-            strkey = 's=' + str(i)
-            link = 'https://' + prefix + '.craigslist.org/search/apa?availabilityMode=0&postal=' + zip + strkey + '&search_distance=' + searchDist
-        df_current = getHouses(makeSoup(link))
-        df = df.append(df_current, ignore_index=True)
+    tag = 'apa'
+    link = 'https://' + prefix +'.craigslist.org/search/' + tag + '?availabilityMode=0&postal=' + zip + '&search_distance=' + dist
+    #switch tag (NY uses aap for some reason)
+    if(requests.get(link).status_code == 404): tag = 'aap'
+    #Iterate through pages in craigslist to get n listings
+    df =  getnListings(prefix, zip, dist, n, link, tag)
 
-    print(df.size)   # We have 2034 when running over 3 pages of cl
+    print("Total # of rentals:  " + str(len(df.index)))   # We have 2034 when running over 3 pages of cl
     print(df.iloc[0]) # 339 rows x 6 cols
 
     df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link'] #Name the columns
@@ -50,8 +41,11 @@ def scrapeRentals(prefix, zip, dist, n):
         df2[['UMD-distance', 'Metro-distance']] = df2.apply(getDistances, axis=1)
 
     #Clean-up data, removing extra characters & adding a col for price/sqft
+    sizePre = len(df.index)
+    df.dropna(how='all')
+    print('Initial size:' + str(sizePre) + '. After removing Nonetype rows: ' + str(len(df.index)))
+
     df[['Price','BR', 'Ba', 'Sqft']] = df.apply(cleanRow, axis=1)
-    #print(df.iloc[0])
     df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link', 'Ba', 'Lat', 'Long', 'Description']#, 'UMDDistance', 'MetroDistance']
     df['PricePerSqft'] = None
     df['PricePerSqft'] = df.apply(pricePerSqft,axis=1)
@@ -62,4 +56,12 @@ def scrapeRentals(prefix, zip, dist, n):
     storeInSQL(df, stringDB_2)
     return stringDB
 
-#main()
+def getnListings(prefix, zip, dist, n, link, tag):
+    df = pd.DataFrame()
+    for i in range(0,n,120): #3000 is the max
+        if(i!=0):
+            strkey = 's=' + str(i)
+            link = 'https://' + prefix + '.craigslist.org/search/' + tag +'?availabilityMode=0&postal=' + zip + strkey + '&search_distance=' + dist
+        df_current = getHouses(makeSoup(link))
+        df = df.append(df_current, ignore_index=True)
+    return df
