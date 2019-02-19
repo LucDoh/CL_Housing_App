@@ -63,7 +63,7 @@ def plotIt(dfx, savePlot = True):
 
     #Seaborn plotting
     import warnings; warnings.filterwarnings("ignore", category=FutureWarning) #TBFixed
-    #sns.set(style="ticks")
+    sns.set(style="ticks")
 
     sns.relplot(x="Sqft", y="Price", hue="BR",
         palette="ch:r=-1.5,l=.75", data=dfx[dfx.BR < 5], legend="full");#palette="ch:r=-.5,l=.75",
