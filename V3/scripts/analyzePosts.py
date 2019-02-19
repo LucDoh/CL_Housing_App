@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 #import folium
 #from folium.plugins import HeatMap
 from utils.helpers import retrieveAll, storeInSQL
+from utils.makePdf import generateReport
 
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score, mean_squared_error
@@ -62,10 +63,10 @@ def plotIt(dfx, savePlot = True):
 
     #Seaborn plotting
     import warnings; warnings.filterwarnings("ignore", category=FutureWarning) #TBFixed
-    sns.set(style="ticks")
+    #sns.set(style="ticks")
 
     sns.relplot(x="Sqft", y="Price", hue="BR",
-        palette="ch:r=-1.5,l=.75", data=dfx[dfx.BR < 5]);#palette="ch:r=-.5,l=.75",
+        palette="ch:r=-1.5,l=.75", data=dfx[dfx.BR < 5], legend="full");#palette="ch:r=-.5,l=.75",
     if (savePlot == True): plt.savefig('plots/relPlot.png')
     f, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(11,7))
 

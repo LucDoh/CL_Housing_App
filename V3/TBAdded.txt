@@ -1,0 +1,5 @@
+## List of things to fix or add!
+1) Deploy via Flask, where 3 forms are filled out and sent to runAll.py to be run.
+
+
+2) Output Folium or Bokeh interactive plot of houses

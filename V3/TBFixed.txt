@@ -1,6 +1,0 @@
-## List of things to fix or add!
-
-1) Scraper throws out a sometimes large amount of posts in getHouses() method. --> Can probably
-get the brSqft from somewhere else? FIXED!!! Now it only throws out posts which are unusable
-
-2) Deploy via Flask, where 3 forms are filled out and sent to runAll.py to be run.

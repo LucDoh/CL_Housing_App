@@ -21,4 +21,3 @@ def generateReport(t, img1, img2):
     pdf.image(img2, w=100, x=45)
     pdf.cell(500, 6, ln=1, align="C")
     pdf.output("plots/report.pdf")
-    
