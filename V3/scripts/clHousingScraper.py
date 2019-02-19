@@ -21,18 +21,28 @@ def scrapeRentals(prefix, zip, dist, n):
     #switch tag (NY uses aap for some reason)
     if(requests.get(link).status_code == 404): tag = 'aap'
     #Iterate through pages in craigslist to get n listings
-    df =  getnListings(prefix, zip, dist, n, link, tag)
-
-    print("Total # of rentals:  " + str(len(df.index)))   # We have 2034 when running over 3 pages of cl
-    print(df.iloc[0]) # 339 rows x 6 cols
-
+    ####
+    df =  getnListings(prefix, zip, dist, n, link, tag) # get all apts and houses
     df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link'] #Name the columns
+    '''
+    dfr = getnListings(prefix, zip, dist, n, link, 'roo') # get all rooms
+    dfr.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link']
+    dfr['BR'] = "1br"
+    print(dfr.columns)
+    print(dfr.to_string())
+    print(dfr.iloc[:4])
+    #print(df.iloc[:4])
+    print ("Before join, length is " + str(len(df.index)))
+    df = df.append(dfr, sort=False)
+    '''
+    ###
 
-    #Let's make new columns:
-    df['Ba'] = None
-    df['Lat'] = None
-    df['Long'] = None
-    df['Description'] = None
+    print("Total # of rentals  " + str(len(df.index)))   # We have 2034 when running over 3 pages of cl
+    #print(df.iloc[0]) # 339 rows x 6 cols
+
+
+    #Let's make new columns and scrape this additional info from the posting itself
+    df['Ba'], df['Lat'], df['Long'], df['Description'] = None, None, None, None
     df[['Ba','Lat', 'Long', 'Description']] = df.apply(addtlInfo, axis=1)
 
     if(distCalc == True):

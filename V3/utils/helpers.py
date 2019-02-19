@@ -25,46 +25,48 @@ def getHouses(soup):
         pID = row.get('data-pid')
         rtitle = row.find(class_="result-title hdrlnk") #Grabs post title + href
         rtitle_txt = rtitle.text
-        if row.find(class_='result-price') is None:
+        href = rtitle.get('href')
+        date = row.find(class_="result-date").get('datetime') #2018-12-11 13:57
+        if row.find(class_='result-price') is None:  #if price is empty
             price = 'nan'
         else:
             price = row.find(class_='result-price').text
-        href = rtitle.get('href')
-        date = row.find(class_="result-date").get('datetime') #for each row, grab - 2018-12-11 13:57
-        # This can often returnNnonetype
+
+        ## brSqft = getBrSqft(row)
         try:
             r = row.find(class_='housing').text.splitlines() # for each row, grab BR + SQFT
             brSqft = [i.replace(" ",'').replace('-','') for i in r if re.search('[a-zA-Z]', i)]  #clean strs
+            #print(brSqft)
         except AttributeError:
             brSqft = [float('nan'), float('nan')]
         if(len(brSqft)== 1 and ('br' in brSqft[0])):
             brSqft = brSqft + [float('nan')]
         elif(len(brSqft) == 1):
             brSqft = [float('nan')] + brSqft
-
+        ###
         r_matrix.append([pID, rtitle_txt, price] + brSqft + [href])
 
     df = pd.DataFrame(r_matrix)
-    print("Missed" + str(sum_Unlabeled))
+    print("Scraping a page... " + str(sum_Unlabeled) + " misses")
     return(df)
 
 # Grab additional info from Link (Ba, lat, long, description)
 def addtlInfo(row):
     r = requests.get(row['Link'])
     soup = BeautifulSoup(r.content, 'lxml');
+    # In RARE posts, parser won't find a map id and return none
     s = soup.find(id="map")
-    # In RARE posts, parser won't find anything and return none
     if s is None: return pd.Series(['nan', 'nan', 'nan', 'nan'])
     lat, long = s.get('data-latitude'), s.get('data-longitude') # Sometimes they don't have a lat/long?
-    s_2 = soup.find(class_='shared-line-bubble') # B) The first shared-line-bubble tag usually gives br/ba.
+    description = soup.find(id='postingbody').text
 
+    s_2 = soup.find(class_='shared-line-bubble') # B) The first shared-line-bubble tag usually gives br/ba.
     # If br/ba isn't included, s_2 will yield next shared-line-bubble: availability date.
     # We don't care about this, so we'll set the number of Baths to nan
     if (s_2 is not None and 'Ba' in s_2.text):
         baths = s_2.text.split("/")[1]
     else:
         baths = 'nan'
-    description = soup.find(id='postingbody').text
 
     return pd.Series([baths, float(lat), float(long), description])
 

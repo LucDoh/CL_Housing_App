@@ -1,5 +1,9 @@
 ## List of things to fix or add!
+
 1) Deploy via Flask, where 3 forms are filled out and sent to runAll.py to be run.
 
+2) Output Folium or Bokeh interactive map plot of houses
 
-2) Output Folium or Bokeh interactive plot of houses
+3) There seem to be an excessive amount of duplicate posts (some posts have
+~10-10^2 dupes), this seems to stem from the scraping function helpers.getHouses()
+[Result: 1887--> 106 Postings are analyzed in the end]

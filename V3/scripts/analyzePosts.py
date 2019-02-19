@@ -33,20 +33,25 @@ def analyze(stringDB):
     #print(dfx.dtypes)
 
 
-
-
 def removeOutliers(dfx):
-    sizePre = dfx.Price.values.size
     dfx = dfx.dropna(subset=['Price']) # Drop NaNs
     #dfx = dfx[dfx.Price/dfx.BR > 300] #Only keep if Price/BR > 300. Not wisconsin.
-
     print("NaNs being removed... %s%%  NaNs (Price)." %
         ((len(dfx['Price'].index) - len(dfx['Price'].dropna().index))/len(dfx['Price'])))
-    print("Outliers (Price>5*STD) being removed...")
-    dfx =  dfx[np.abs(dfx.Price-dfx.Price.mean()) <= (5*dfx.Price.std())]
+    print("Outliers (Price/BR>5*STD from mean) removed...")
+    dfx =  dfx[np.abs((dfx['Price']/dfx['BR'])-(dfx['Price']/dfx['BR']).mean()) <= (4*(dfx['Price']/dfx['BR']).std())]
+    #dfx =  dfx[np.abs(dfx.Price-dfx.Price.mean()) <= (4*dfx.Price.std())]
+    sizePre = dfx.Price.values.size
+
+    print("Modes: ")
+    modeBasis = 'Title'
+    print(dfx[modeBasis].value_counts())
+    print(dfx[modeBasis].mode().values[0])
+    print(len(dfx[dfx[modeBasis] == dfx[modeBasis].mode().values[0]].index))
+    dfx = dfx.drop_duplicates(['Title'])
+
     print('# of listings: ' + str(sizePre) + ' --> ' + str(dfx.Price.values.size))
     print('(' + str(dfx.Price.values.size) + ' listings)\n', file=open("plots/facts.txt", "a"))
-
 
     return dfx
 

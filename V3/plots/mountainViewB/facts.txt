@@ -1,0 +1,6 @@
+Here is the report for clHousing_94039_5_3000.db.
+(95 listings)
+
+Average for 1 bedrooms is $2970.18. --> $2970.18 per room [34]
+Average for 2 bedrooms is $3727.08. --> $1863.54 per room [52]
+Average for 3 bedrooms is $4812.89. --> $1604.30 per room [9]
