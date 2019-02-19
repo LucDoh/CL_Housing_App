@@ -32,9 +32,9 @@ B)  A PDF report of the average price by # of bedrooms and 5 distribution plots.
 
 <p align="center">
 Here is the report for <i> clHousing_94039_5_3000.db </i> with <b> 2500 listings </b>. <br/> <br/>
-Average for 1 bedrooms is $2965.17. --> $2965.17 per room [875] <br/>
-Average for 2 bedrooms is $3668.39. --> $1834.19 per room [1400] <br/>
-Average for 3 bedrooms is $4812.89. --> $1604.30 per room [225]
+Average for 1 bedrooms is $2965.17. --> $2965.17 per room&nbsp;&nbsp;&nbsp;[875 listings] <br/>
+Average for 2 bedrooms is $3668.39. --> $1834.19 per room&nbsp;&nbsp;&nbsp;[1400 listings] <br/>
+Average for 3 bedrooms is $4812.89. --> $1604.30 per room&nbsp;&nbsp;&nbsp;[225 listings]
 </p>
 <p align="center">
   <img src="V3/plots/nice_MountainView/distPlots.png" />
