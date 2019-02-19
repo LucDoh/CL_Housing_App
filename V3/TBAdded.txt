@@ -5,5 +5,7 @@
 2) Output Folium or Bokeh interactive map plot of houses
 
 3) There seem to be an excessive amount of duplicate posts (some posts have
-~10-10^2 dupes), this seems to stem from the scraping function helpers.getHouses()
-[Result: 1887--> 106 Postings are analyzed in the end]
+~10-10^2 dupes), this seems to stem from the scraping function helpers.getHouses(),
+called on L25 of clHousingScraper.py [Result: Only 5-10% Postings are analyzed in the end]...
+
+4) Move visualization functions in analyzePosts to a util called visualize.py

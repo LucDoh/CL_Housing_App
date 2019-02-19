@@ -24,6 +24,7 @@ def scrapeRentals(prefix, zip, dist, n):
     ####
     df =  getnListings(prefix, zip, dist, n, link, tag) # get all apts and houses
     df.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link'] #Name the columns
+    print((df['Title'].value_counts()[0])) #??? getNListings yields too many dupes
     '''
     dfr = getnListings(prefix, zip, dist, n, link, 'roo') # get all rooms
     dfr.columns = ['PID', 'Title', 'Price', 'BR', 'Sqft', 'Link']
@@ -38,15 +39,12 @@ def scrapeRentals(prefix, zip, dist, n):
     ###
 
     print("Total # of rentals  " + str(len(df.index)))   # We have 2034 when running over 3 pages of cl
-    #print(df.iloc[0]) # 339 rows x 6 cols
-
 
     #Let's make new columns and scrape this additional info from the posting itself
     df['Ba'], df['Lat'], df['Long'], df['Description'] = None, None, None, None
     df[['Ba','Lat', 'Long', 'Description']] = df.apply(addtlInfo, axis=1)
 
-    if(distCalc == True):
-        #Let's make 2 new columns:
+    if(distCalc == True): #Let's make 2 new columns:
         df2['UMD-distance'], df2['Metro-distance'] = None, None
         df2[['UMD-distance', 'Metro-distance']] = df2.apply(getDistances, axis=1)
 

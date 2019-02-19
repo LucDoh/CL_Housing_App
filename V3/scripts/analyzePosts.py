@@ -45,11 +45,10 @@ def removeOutliers(dfx):
 
     print("Modes: ")
     modeBasis = 'Title'
-    print(dfx[modeBasis].value_counts())
-    print(dfx[modeBasis].mode().values[0])
+    print(dfx[modeBasis].mode().values[0]) #print(dfx[modeBasis].value_counts())
     print(len(dfx[dfx[modeBasis] == dfx[modeBasis].mode().values[0]].index))
+    
     dfx = dfx.drop_duplicates(['Title'])
-
     print('# of listings: ' + str(sizePre) + ' --> ' + str(dfx.Price.values.size))
     print('(' + str(dfx.Price.values.size) + ' listings)\n', file=open("plots/facts.txt", "a"))
 
