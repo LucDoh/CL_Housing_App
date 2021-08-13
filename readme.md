@@ -37,8 +37,8 @@ Average for 2 bedrooms is $3668.39. --> $1834.19 per room&nbsp;&nbsp;&nbsp;[1400
 Average for 3 bedrooms is $4812.89. --> $1604.30 per room&nbsp;&nbsp;&nbsp;[225 listings]
 </p>
 <p align="center">
-  <img src="V3/plots/nice_MountainView/distPlots.png" />
+  <img src="plots/nice_MountainView/distPlots.png" />
 </p>
 <p align="center">
-  <img src="V3/plots/nice_MountainView/relPlot.png" />
+  <img src="plots/nice_MountainView/relPlot.png" />
 </p>
