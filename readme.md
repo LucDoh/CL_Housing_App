@@ -1,6 +1,6 @@
-# Overview of V3
+# Overview
 
-The whole rental analysis program is run by the script runAll.py, which will:
+This rental analysis program is run by the script runAll.py, which will:
 
 1. Scrape craigslist within some radius, r, of a zip-code for n rentals. If a database fulfilling the requests already exists, this is skipped.
 2. Plot & compute, after calling removeOutliers() to removes posts with no price or where the price is >5*STD from the mean.
